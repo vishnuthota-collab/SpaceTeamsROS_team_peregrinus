@@ -30,14 +30,14 @@ class RoverController(Node):
         self.current_rotation_localFrame = None
         self.state = "Driving"
 
-        self.create_subscription(Point, 'LocationMarsFrame', self.location_marsFrame_callback, 10)
-        self.create_subscription(Point, 'VelocityMarsFrame', self.velocity_marsFrame_callback, 10)
-        self.create_subscription(Quaternion, 'RotationMarsFrame', self.rotation_marsFrame_callback, 10)
-        self.create_subscription(Point, 'LocationLocalFrame', self.location_localFrame_callback, 10)
-        self.create_subscription(Point, 'VelocityLocalFrame', self.velocity_localFrame_callback, 10)
-        self.create_subscription(Quaternion, 'RotationLocalFrame', self.rotation_localFrame_callback, 10)
+        self.create_subscription(Point, '/LocationMarsFrame', self.location_marsFrame_callback, 10)
+        self.create_subscription(Point, '/VelocityMarsFrame', self.velocity_marsFrame_callback, 10)
+        self.create_subscription(Quaternion, '/RotationMarsFrame', self.rotation_marsFrame_callback, 10)
+        self.create_subscription(Point, '/LocationLocalFrame', self.location_localFrame_callback, 10)
+        self.create_subscription(Point, '/VelocityLocalFrame', self.velocity_localFrame_callback, 10)
+        self.create_subscription(Quaternion, '/RotationLocalFrame', self.rotation_localFrame_callback, 10)
 
-        self.create_subscription(Point, 'CoreSamplingComplete', self.core_sampling_complete_callback, 1)
+        self.create_subscription(Point, '/CoreSamplingComplete', self.core_sampling_complete_callback, 1)
 
         # Control state
         self.target_loc_localFrame = None
@@ -302,13 +302,20 @@ def main(args=None):
 
     rover_controller.waypoints = waypoints_localFrame
     rover_controller.current_waypoint_idx = 0
-
-    rover_controller.log_message(
-        f"Starting navigation: moving from ({current_x:.2f}, {current_y:.2f}) to ({waypoints_localFrame[0][0]:.2f}, {waypoints_localFrame[0][1]:.2f})"
-    )
     
-    rover_controller.start_navigation(waypoints_localFrame[0])
+    #original code
+    #rover_controller.log_message(
+    #    f"Starting navigation: moving from ({current_x:.2f}, {current_y:.2f}) to ({waypoints_localFrame[0][0]:.2f}, {waypoints_localFrame[0][1]:.2f})"
+    #)
+    
+    #rover_controller.start_navigation(waypoints_localFrame[0])
 
+    #test code for submission
+    rover_controller.log_message("Hello")
+    
+    rover_controller.send_accelerator_command(2.0)
+    #rover_controller.send_brake_command(2.0)
+    
     try:
         rclpy.spin(rover_controller)
     finally:
